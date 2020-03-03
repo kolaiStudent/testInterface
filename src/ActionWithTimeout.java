@@ -4,21 +4,26 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ActionWithTimeout extends Thread{
-    //метод, который нужно было реализовать. Он вызивает doAction в новом потоку и выбрасывает ошибку, если прошло timeout мс.
-    public void actionWithTimeout(Action a, int timeout) throws TimeoutException,ArithmeticException, InterruptedException {
+public class ActionWithTimeout<P> extends Thread{
+
+    public void actionWithTimeout(Action a,P p, long timeout) throws TimeoutException, InterruptedException {
         b = a;
+        t=p;
         this.start();
         this.join(timeout);
-        if (this.isAlive()) {
-           throw new TimeoutException("Время вышло");
-         }
+            if (this.isAlive()) {
+                throw new TimeoutException("Время вышло");
+            }
     }
-
+        private P t;
         private Action b;
           @Override
          public void run(){
-                  b.doAction(5000000);
-         }
+              try {
+                  System.out.println(b.does(t));
+              } catch (Exception e) {
+                  e.printStackTrace();
+              }
+          }
 
 }
